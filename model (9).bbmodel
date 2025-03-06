@@ -7,55 +7,78 @@ class MICROhid:
         self.charge_start_time = None
         self.charge_duration = 10  # Max charge time in seconds
         self.is_idle = True
-        self.animation = {"idle": None, "charge": None, "shoot": None}  # Placeholder for animations
-        self.texture = None
+        self.animation = {
+            "idle": None,
+            "charge": None,
+            "shoot": None
+        }  # Placeholder for animation files
+        self.texture = None  # Placeholder for the texture file
 
     def load_assets(self, idle_file, charge_file, shoot_file, texture_file):
+        """
+        Load animations and texture assets for the MICROhid weapon.
+        """
         self.animation["idle"] = idle_file
         self.animation["charge"] = charge_file
         self.animation["shoot"] = shoot_file
         self.texture = texture_file
-        print("Assets loaded:")
-        print(f"Idle Animation: {self.animation['idle']}")
-        print(f"Charge Animation: {self.animation['charge']}")
-        print(f"Shoot Animation: {self.animation['shoot']}")
-        print(f"Texture: {self.texture}")
+        print("Assets loaded successfully:")
+        print(f" - Idle Animation: {self.animation['idle']}")
+        print(f" - Charge Animation: {self.animation['charge']}")
+        print(f" - Shoot Animation: {self.animation['shoot']}")
+        print(f" - Texture: {self.texture}")
 
     def start_charge(self):
+        """
+        Initiates the charging process.
+        Plays the charge animation and tracks charging duration.
+        """
         if not self.charging:
             self.charging = True
             self.charge_start_time = time.time()
             self.is_idle = False
-            print("Charging started")
-            # Play charge animation
+            print("Charging initiated.")
             print(f"Playing charge animation: {self.animation['charge']}")
 
     def release_charge(self):
+        """
+        Releases the charge, playing the shoot animation and calculating
+        the charging duration.
+        """
         if self.charging:
             self.charging = False
             charge_time = time.time() - self.charge_start_time
             self.charge_start_time = None
-            print("Charging released")
-            # Play shoot animation
+            print("Charge released!")
             print(f"Playing shoot animation: {self.animation['shoot']}")
             print(f"Charge duration: {min(charge_time, self.charge_duration)} seconds")
 
     def idle(self):
+        """
+        Sets the weapon to its idle state, playing the idle animation.
+        """
         if not self.charging:
             self.is_idle = True
-            # Play idle animation
+            print(f"Returning to idle stance...")
             print(f"Playing idle animation: {self.animation['idle']}")
 
-# Example usage
-microhid = MICROhid()
-microhid.load_assets(
-    "microhid_hd_gun.animationIdle.json",
-    "microhid_hd_gun.animationCharge.json",
-    "microhid_hd_gun.animationShoot.json",
-    "texture (7).png"
-)
-microhid.idle()
-microhid.start_charge()
-time.sleep(5)  # Simulating a 5-second charge
-microhid.release_charge()
-microhid.idle()
+
+# Boilerplate Usage Example
+if __name__ == "__main__":
+    # Create an instance of MICROhid
+    microhid = MICROhid()
+
+    # Load assets (animations and texture)
+    microhid.load_assets(
+        "microhid_hd_gun.animationIdle.json",
+        "microhid_hd_gun.animationCharge.json",
+        "microhid_hd_gun.animationShoot.json",
+        "texture (7).png"
+    )
+
+    # Simulate actions
+    microhid.idle()  # Play idle animation
+    microhid.start_charge()  # Start charging
+    time.sleep(5)  # Simulate holding charge for 5 seconds
+    microhid.release_charge()  # Release charge and shoot
+    microhid.idle()  # Return to idle stance
