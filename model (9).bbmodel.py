@@ -80,6 +80,65 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:  # Custom key to reset to idle
                 microhid.idle()
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.RangedWeaponItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.item.UseAnim;
+
+public class MicrohidItem extends RangedWeaponItem {
+
+    public MicrohidItem() {
+        super(new Item.Properties()
+            .durability(500) // Maximum durability
+            .tab(CreativeModeTab.TAB_COMBAT)); // Place in the Combat tab
+    }
+
+    @Override
+    public void releaseUsing(ItemStack stack, Level level, Player player, int timeCharged) {
+        if (!level.isClientSide) {
+            // Calculate charge time
+            int chargeTime = this.getUseDuration(stack) - timeCharged;
+            float power = calculatePower(chargeTime);
+
+            // Launch projectile
+            if (power >= 0.1F) { // Minimum power threshold
+                Arrow arrow = new Arrow(level, player);
+                arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, power * 3.0F, 1.0F);
+                arrow.setBaseDamage(power * 3.0F); // Scales damage with charge
+                level.addFreshEntity(arrow);
+
+                // Damage the MICROhid item
+                stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
+            }
+        }
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.BOW; // Uses the bow animation
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return 72000; // Maximum charge duration
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+        return repair.is(Items.IRON_INGOT); // Repair using iron ingots
+    }
+
+    private float calculatePower(int chargeTime) {
+        float power = (float) chargeTime / 20.0F; // Convert to seconds (20 ticks = 1 second)
+        return Math.min(power, 1.0F); // Cap at full power (1.0F)
+    }
+}
 
 # Quit Pygame
 pygame.quit()
