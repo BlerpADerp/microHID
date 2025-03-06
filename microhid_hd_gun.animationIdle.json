@@ -1,0 +1,14 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.microhid_hd_gun.first_person_hold": {
+			"loop": true,
+			"bones": {
+				"root_item": {
+					"rotation": [449.9429, -0.23967, 114.12956],
+					"position": [1, 21, -7]
+				}
+			}
+		}
+	}
+}

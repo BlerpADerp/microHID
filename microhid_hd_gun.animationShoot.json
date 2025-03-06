@@ -1,0 +1,23 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.microhid_hd_gun.shoot": {
+			"animation_length": 1.0417,
+			"bones": {
+				"root_item": {
+					"rotation": {
+						"0.0417": [90, 64.58333, 0],
+						"1.0": [90, 2.5, 0]
+					},
+					"position": [0.5, 22.5, -0.5]
+				},
+				"bone2": {
+					"position": {
+						"0.0": [0, -3, 0],
+						"1.0417": [0, 8148, 0]
+					}
+				}
+			}
+		}
+	}
+}
